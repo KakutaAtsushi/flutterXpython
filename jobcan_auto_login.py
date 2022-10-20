@@ -1,16 +1,9 @@
-from dotenv import load_dotenv
 from selenium import webdriver
 from time import sleep
-import os
 import chromedriver_binary
 
-load_dotenv()
-jobcan_login_id = os.getenv("JOBCAN_LOGIN_ID")
-jobcan_login_password = os.getenv("JOBCAN_LOGIN_PASSWORD")
 
-
-# すいません
-def jobcan_automation(arg):
+def jobcan_automation(method, login_id, password):
     try:
         options = webdriver.ChromeOptions()
         options.add_argument("--headless")
@@ -19,10 +12,10 @@ def jobcan_automation(arg):
         driver.get("https://id.jobcan.jp/users/sign_in")
         sleep(1)
 
-        login_id = driver.execute_script("return document.querySelector('#user_email')").send_keys(jobcan_login_id)
+        login_id = driver.execute_script("return document.querySelector('#user_email')").send_keys(login_id)
         sleep(1)
         password = driver.execute_script("return document.querySelector('#user_password')").send_keys(
-            jobcan_login_password)
+            password)
         sleep(1)
 
         submit = driver.execute_script("return document.querySelector('#login_button')").click()
@@ -32,10 +25,10 @@ def jobcan_automation(arg):
         sleep(5)
         handle_array = driver.window_handles
         driver.switch_to.window(handle_array[1])
-        if arg == 0:
+        if method == 0:
             driver.execute_script("return document.querySelector('#adit-button-work-start')").click()
             sleep(1)
-        if arg == 1:
+        if method == 1:
             driver.execute_script("return document.querySelector('#adit-button-work-end')").click()
             sleep(1)
         driver.close()
@@ -43,6 +36,3 @@ def jobcan_automation(arg):
 
     except:
         return 0
-
-
-jobcan_automation(0)
